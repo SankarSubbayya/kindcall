@@ -67,13 +67,26 @@ textarea {
 
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
 
-.alerts { margin-bottom: 16px; }
-.alert {
-  background: #1a1012; border-left: 4px solid #b00020; border-radius: 8px;
-  padding: 10px 12px; margin-bottom: 8px;
+.contactbar { display: flex; gap: 20px; flex-wrap: wrap; margin: -4px 0 16px; font-size: 13px; color: #aeb4bd; }
+.contactbar b { color: #e6e8eb; font-weight: 600; }
+
+.phone-wrap { margin-bottom: 20px; }
+.alerts-title { font-size: 16px; margin: 0 0 12px; }
+.phone {
+  max-width: 360px; border: 1px solid #1f3b30; border-radius: 22px; overflow: hidden;
+  box-shadow: 0 12px 34px rgba(0,0,0,.45);
 }
-.alert strong { font-size: 12px; text-transform: uppercase; color: #f0a; letter-spacing: 0.05em; }
-.alert pre { margin: 6px 0 0; white-space: pre-wrap; font-family: inherit; font-size: 14px; color: #e6e8eb; }
+.phone-top { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #075e54; color: #fff; }
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: #128c7e; display: flex; align-items: center; justify-content: center; font-weight: 700; flex: 0 0 auto; }
+.contact-name { font-weight: 700; font-size: 14px; }
+.contact-sub { font-size: 11px; opacity: .85; }
+.phone-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; background: #0b141a; min-height: 90px; max-height: 360px; overflow: auto; }
+.bubble { align-self: flex-start; max-width: 90%; background: #1f2c34; border-radius: 12px 12px 12px 3px; padding: 10px 12px; animation: pop .35s ease; }
+.bubble.crit { box-shadow: 0 0 0 1.5px #b00020 inset; }
+.bubble pre { margin: 0; white-space: pre-wrap; font-family: inherit; font-size: 13.5px; color: #e6e8eb; line-height: 1.45; }
+.bubble-meta { font-size: 11px; color: #8b929b; margin-top: 6px; }
+.bubble-empty { align-self: center; color: #8b929b; font-size: 13px; padding: 18px; text-align: center; }
+@keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.97); } to { opacity: 1; transform: none; } }
 
 .feed h2 { font-size: 18px; }
 .note-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }

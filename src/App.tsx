@@ -68,6 +68,18 @@ export default function App() {
         ))}
       </nav>
 
+      {selectedPatient && (
+        <div className="contactbar">
+          <span>
+            <b>Family contact:</b> {selectedPatient.emergencyContactName ?? "—"}
+            {selectedPatient.emergencyContactPhone ? ` · ${selectedPatient.emergencyContactPhone}` : ""}
+          </span>
+          {selectedPatient.medications?.length > 0 && (
+            <span><b>Meds:</b> {selectedPatient.medications.join(", ")}</span>
+          )}
+        </div>
+      )}
+
       <section className="card dictate">
         <h2>Dictate a care note{selectedPatient ? ` for ${selectedPatient.name}` : ""}</h2>
         <input
@@ -113,16 +125,39 @@ export default function App() {
         )}
       </section>
 
-      {alerts && alerts.length > 0 && (
-        <section className="alerts">
-          {alerts.map((a) => (
-            <div key={a._id} className="alert" style={{ borderColor: URGENCY_STYLE[a.urgency]?.bg }}>
-              <strong>
-                {a.sent ? "Sent" : "Logged"} · {a.channel}
-              </strong>
-              <pre>{a.message}</pre>
+      {selectedPatient && (
+        <section className="phone-wrap">
+          <h2 className="alerts-title">🔔 Family notifications</h2>
+          <div className="phone">
+            <div className="phone-top">
+              <div className="avatar">
+                {(selectedPatient.emergencyContactName ?? "F").charAt(0).toUpperCase()}
+              </div>
+              <div>
+                <div className="contact-name">{selectedPatient.emergencyContactName ?? "Family contact"}</div>
+                <div className="contact-sub">
+                  KindCall · {selectedPatient.emergencyContactPhone ?? "no number"} · WhatsApp
+                </div>
+              </div>
             </div>
-          ))}
+            <div className="phone-body">
+              {(!alerts || alerts.length === 0) && (
+                <div className="bubble-empty">
+                  No urgent alerts yet. Calm notes don't page the family — dictate something urgent.
+                </div>
+              )}
+              {alerts?.map((a) => (
+                <div key={a._id} className={a.urgency === "critical" ? "bubble crit" : "bubble"}>
+                  <pre>{a.message}</pre>
+                  <div className="bubble-meta">
+                    {a.sent ? `Delivered via ${a.channel}` : "Logged · live send when Photon is configured"}
+                    {" · "}
+                    {new Date(a._creationTime).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
       )}
 
