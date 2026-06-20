@@ -1,0 +1,152 @@
+################################################################################
+# VoiceForge — Hackathon Instructions & Plan
+# Voice Cursor x Photon x Convex x Respan — Evening Mini-Hackathon
+################################################################################
+
+[event]
+name        = "Voice Cursor / Photon / Convex / Respan Mini-Hackathon"
+format      = "Focused evening mini-hackathon (in-person, ~30-50 developers)"
+date        = "2026-06-19"
+theme       = "Voice as a medium for coding / keyboardless development workflows"
+vibe        = "High-energy, social, hands-on building with food + drinks"
+
+[event.perks]
+prizes   = "Premium hardware + developer credits from participating hosts for top projects"
+catering = "Food, pizza, and drinks throughout the evening"
+network  = "Tight-knit community of voice + AI dictation creators and engineers"
+
+################################################################################
+# SPONSORS — and exactly how this project uses each
+################################################################################
+
+[sponsors.voice_cursor]
+what     = "AI voice dictation tool for developers (speak up to ~180 WPM vs ~45 typing)"
+url      = "https://voicecursor.ai/"
+features = "Syntax-smart transcription, verbal @-file tagging, LLM refinement of speech"
+used_for = "Primary voice/dictation input layer; also used to BUILD the app hands-free"
+note     = "It is a dictation app, not an SDK — the app is voice-first by design"
+
+[sponsors.convex]
+what     = "Reactive TypeScript backend + database (realtime queries, actions, scheduling)"
+url      = "https://convex.dev/"
+used_for = "Source of truth + realtime UI; stores sessions, transcripts, agent steps, diffs"
+cli      = "npm create convex@latest  (CLI v1.41 available)"
+
+[sponsors.respan]
+what     = "LLM engineering platform: observability, evals, prompt mgmt, unified AI gateway"
+url      = "https://www.respan.ai/"
+used_for = "Route ALL LLM calls through the Respan gateway (OpenAI-compatible) for full tracing + LLM-as-judge evals"
+note     = "Formerly Keywords AI; ~500 models behind one endpoint"
+
+[sponsors.photon]
+what     = "Spectrum: open-source TS framework deploying agents to iMessage/WhatsApp/Telegram/Slack/Discord"
+url      = "https://photon.codes/spectrum"
+used_for = "STRETCH: surface VoiceForge agent over a messaging channel (out of evening MVP scope)"
+status   = "optional / stretch goal"
+
+################################################################################
+# PROJECT — VoiceForge: a speak-to-code agent
+################################################################################
+
+[project]
+name        = "VoiceForge"
+tagline     = "Speak a feature. Watch the agent build it. See every LLM call traced."
+concept     = "Dictate a feature/fix; an LLM agent plans + edits code live; Convex streams a reactive 'agent working' board; Respan traces and auto-evals every call."
+stack       = "Full TypeScript, Convex-native"
+
+[project.flow]
+step_1 = "Voice Cursor dictation (or browser mic) -> transcript text"
+step_2 = "Transcript -> Convex mutation (session + utterance stored, UI updates live)"
+step_3 = "Convex action runs agent loop: plan -> edit -> result, LLM calls via Respan gateway"
+step_4 = "Each agent step written back to Convex -> web UI streams progress in realtime"
+step_5 = "Respan dashboard shows full traces + LLM-as-judge eval (does code match intent?)"
+
+[project.architecture]
+frontend = "Vite + React + Convex client (hold-to-talk mic UI, live task/diff board)"
+backend  = "Convex (schema.ts, queries, mutations, actions for the agent loop)"
+llm      = "Anthropic Claude (latest) via Respan OpenAI-compatible base URL"
+stt      = "Browser Web Speech API for MVP; Whisper via Respan as upgrade"
+
+[project.repo_layout]
+root      = "/Users/sankar/hackathons/voice_cursor"
+convex    = "convex/   -> schema.ts, sessions.ts, agent.ts (actions)"
+src       = "src/      -> App.tsx (mic + reactive board), components, respan client"
+env       = ".env.local -> CONVEX_URL, RESPAN_API_KEY, ANTHROPIC_API_KEY (via Respan)"
+
+################################################################################
+# REUSE — prior projects to lift code from
+################################################################################
+
+[reuse.voice_agent]
+path       = "/Users/sankar/projects/voice_agent"
+lang       = "Python (Flask, VocalBridge + LiveKit)"
+reuse      = "Real-time voice pipeline patterns; agents/base_agent.py orchestration; intent router"
+relevance  = "Reference for voice I/O + agent loop (port concepts to TS)"
+
+[reuse.meeting_agent]
+path       = "/Users/sankar/hackathons/meeting_agent"
+lang       = "TypeScript (Next.js, Claude)"
+reuse      = "lib/services/claude.ts structured extraction + tool-calling; status polling pattern"
+relevance  = "Closest TS agent-loop to adapt for the speak-to-code agent"
+
+[reuse.agent_toolkit]
+path       = "/Users/sankar/hackathons/agent_toolkit"
+lang       = "Python (Apify, Contextual AI, MCP)"
+reuse      = "Tool-calling / MCP tool-registration patterns"
+relevance  = "Optional: grounded answers if agent needs repo/docs context"
+
+################################################################################
+# PLAN — evening milestones (scope tight, demo-first)
+################################################################################
+
+[[milestones]]
+id    = "M1"
+title = "Scaffold"
+tasks = "npm create convex@latest in repo; Vite+React+Convex wired; app boots"
+done  = false
+
+[[milestones]]
+id    = "M2"
+title = "Voice in -> Convex"
+tasks = "Mic/dictation captures transcript; mutation stores it; UI shows it live"
+done  = false
+
+[[milestones]]
+id    = "M3"
+title = "Respan gateway"
+tasks = "Convex action calls Claude via Respan base URL; trace visible in Respan dashboard"
+done  = false
+
+[[milestones]]
+id    = "M4"
+title = "Agent loop -> code"
+tasks = "Agent turns transcript into a plan + code edit/diff; steps streamed to Convex board"
+done  = false
+
+[[milestones]]
+id    = "M5"
+title = "Evals + demo"
+tasks = "LLM-as-judge eval (intent vs output) via Respan; polish UI; record demo"
+done  = false
+
+[[milestones]]
+id    = "M6"
+title = "STRETCH: Photon/Spectrum"
+tasks = "Expose agent over Telegram/Slack via Spectrum"
+done  = false
+
+################################################################################
+# DEMO — the 2-minute pitch
+################################################################################
+
+[demo]
+hook    = "Hands on the table, not the keyboard. I speak; the codebase changes."
+beat_1  = "Say a feature out loud (Voice Cursor)"
+beat_2  = "Convex board lights up live as the agent plans + edits"
+beat_3  = "Flip to Respan: every LLM call traced, auto-graded for intent match"
+closer  = "Voice -> reactive backend -> observable AI. Keyboardless, end to end."
+
+[judging_angles]
+on_theme        = "Voice-first, keyboardless coding — directly on the hackathon theme"
+sponsor_coverage = "Uses 3 sponsors deeply (Voice Cursor, Convex, Respan) + Photon stretch"
+wow             = "Realtime reactive UI + visible LLM observability in one demo"
