@@ -29,7 +29,13 @@ export default function App() {
   const notes = useQuery(api.careNotes.listByPatient, patientId ? { patientId } : "skip");
   const alerts = useQuery(api.careNotes.alertsByPatient, patientId ? { patientId } : "skip");
 
-  const { supported, listening, transcript, setTranscript, start, stop } = useDictation();
+  const { supported, listening, transcript, setTranscript, error, start, stop } = useDictation();
+
+  const EXAMPLES: { label: string; text: string }[] = [
+    { label: "Critical", text: "She had chest pain and we need an ambulance right away" },
+    { label: "Medication", text: "She forgot her pills and we ran out of her blood pressure medication" },
+    { label: "Calm", text: "She was happy and feeling great today, we had a lovely chat" },
+  ];
 
   const selectedPatient = useMemo(
     () => patients?.find((p) => p._id === patientId) ?? null,
@@ -80,6 +86,14 @@ export default function App() {
           }
           rows={4}
         />
+        <div className="examples">
+          <span className="examples-label">Quick fill:</span>
+          {EXAMPLES.map((ex) => (
+            <button key={ex.label} className="chip" onClick={() => setTranscript(ex.text)}>
+              {ex.label}
+            </button>
+          ))}
+        </div>
         <div className="row">
           {supported && (
             <button className={listening ? "mic listening" : "mic"} onClick={listening ? stop : start}>
@@ -90,8 +104,12 @@ export default function App() {
             Save note
           </button>
         </div>
+        {error && <p className="hint error">{error}</p>}
         {!supported && (
-          <p className="hint">In-app mic not available in this browser — use Voice Cursor dictation into the box.</p>
+          <p className="hint">In-app mic not available in this browser — use the Quick fill buttons, type, or dictate with Voice Cursor.</p>
+        )}
+        {supported && !error && (
+          <p className="hint">Tip: 🎙 Speak needs Chrome/Edge + mic permission. Or use Quick fill / Voice Cursor.</p>
         )}
       </section>
 
