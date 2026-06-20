@@ -201,6 +201,13 @@ export default function App() {
           );
         })}
       </section>
+
+      <footer className="stack">
+        <span><b>Voice Cursor</b> — voice dictation</span>
+        <span><b>Respan</b> — AI structuring + faithfulness evals</span>
+        <span><b>Convex</b> — realtime backend &amp; database</span>
+        <span><b>Photon</b> — family alerts (WhatsApp/iMessage)</span>
+      </footer>
     </div>
   );
 }

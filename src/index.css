@@ -105,3 +105,6 @@ textarea::placeholder, .author::placeholder { color: #94a3b8; }
 .meta .eval.bad { color: #dc2626; }
 .needs { margin: 10px 0 0; padding-left: 18px; color: #1f2937; }
 .needs li { margin: 2px 0; }
+
+.stack { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 28px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; }
+.stack b { color: #0f172a; font-weight: 700; }

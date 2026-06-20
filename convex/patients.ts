@@ -11,29 +11,54 @@ export const get = query({
   handler: async (ctx, { patientId }) => await ctx.db.get(patientId),
 });
 
+const DEMO_PATIENTS = [
+  {
+    name: "Margaret Doe",
+    patientType: "senior",
+    phone: "+14084315433",
+    medications: ["Lisinopril", "Metformin"],
+    emergencyContactName: "Sarah (daughter)",
+    emergencyContactPhone: "(408) 431-5433",
+  },
+  {
+    name: "Walter Reed",
+    patientType: "senior",
+    phone: "+14084315433",
+    medications: ["Atorvastatin"],
+    emergencyContactName: "James (son)",
+    emergencyContactPhone: "(408) 431-5433",
+  },
+];
+
 /** Idempotent demo seed so the dashboard is never empty. */
 export const seed = mutation({
   args: {},
   handler: async (ctx) => {
     const existing = await ctx.db.query("patients").first();
     if (existing) return existing._id;
+    let first = null;
+    for (const p of DEMO_PATIENTS) {
+      const id = await ctx.db.insert("patients", p);
+      first = first ?? id;
+    }
+    return first;
+  },
+});
 
-    const margaret = await ctx.db.insert("patients", {
-      name: "Margaret Doe",
-      patientType: "senior",
-      phone: "+15555550101",
-      medications: ["Lisinopril", "Metformin"],
-      emergencyContactName: "Sarah (daughter)",
-      emergencyContactPhone: "+15555550199",
-    });
-    await ctx.db.insert("patients", {
-      name: "Walter Reed",
-      patientType: "senior",
-      phone: "+15555550102",
-      medications: ["Atorvastatin"],
-      emergencyContactName: "James (son)",
-      emergencyContactPhone: "+15555550198",
-    });
-    return margaret;
+/** Wipe demo data and re-seed (used to refresh contacts before a demo). */
+export const resetDemo = mutation({
+  args: {},
+  handler: async (ctx) => {
+    for (const table of ["alerts", "careNotes", "patients"] as const) {
+      for (const row of await ctx.db.query(table).collect()) {
+        await ctx.db.delete(row._id);
+      }
+    }
+    let first = null;
+    for (const p of DEMO_PATIENTS) {
+      const id = await ctx.db.insert("patients", p);
+      first = first ?? id;
+    }
+    return first;
   },
 });
